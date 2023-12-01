@@ -13,23 +13,30 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        exclude: /\.module\.css$/,
-        use: [{loader: 'style-loader'}, {loader: 'css-loader'}],
-      },
-      {
-        test: /\.module\.css$/,
         use: [
-          {loader: 'style-loader'},
+          { loader: 'style-loader' },
           {
             loader: 'css-loader',
-            options: {modules: true, localsConvention: 'camelCaseOnly'},
-          },
+            options: {
+              modules: {
+              auto: true,
+              exportLocalsConvention: "camelCase"
+              }
+            },
+          }
         ],
       },
       {
-        test: /\.js$/,
+        test: /\.(?:js|mjs|cjs)$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', { targets: "defaults" }]
+            ]
+          }
+        }
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
@@ -38,7 +45,6 @@ module.exports = {
     ],
   },
   devServer: {
-    contentBase: path.join(__dirname, './public'),
-    historyApiFallback: true,
-  },
+    static: path.join(__dirname, './public')
+  }
 }
